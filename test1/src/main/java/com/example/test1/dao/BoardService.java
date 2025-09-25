@@ -24,4 +24,9 @@ public class BoardService {
 		resultMap.put("result", "success");
 		return resultMap;
 	}
+	
+	public void boardRemove(HashMap<String, Object> map) {
+		// TODO Auto-generated method stub
+		boardmapper.boardRemove(map);
+	}
 }

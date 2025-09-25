@@ -11,4 +11,5 @@ import com.example.test1.model.Board;
 public interface BoardMapper {
 	
 	List<Board> boardList(HashMap<String, Object> map);
+	void boardRemove(HashMap<String, Object> map);
 }

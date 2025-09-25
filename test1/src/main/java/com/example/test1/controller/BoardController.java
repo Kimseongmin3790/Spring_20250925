@@ -33,4 +33,12 @@ public class BoardController {
 		
 		return new Gson().toJson(resultMap);
 	}
+	
+	@RequestMapping(value = "/board-remove.dox", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+	@ResponseBody
+	public String boardRemove(Model model, @RequestParam HashMap<String, Object> map) throws Exception {
+		boardservice.boardRemove(map);
+		
+		return "success";
+	}
 }

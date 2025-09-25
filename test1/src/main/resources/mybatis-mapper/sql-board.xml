@@ -7,6 +7,11 @@
 		SELECT *
 		FROM TBL_BOARD
 	</select>
+	
+	<delete id="boardRemove" parameterType="hashmap">
+		DELETE FROM TBL_BOARD
+		WHERE BOARDNO = #{boardNo}
+	</delete>
 </mapper>
 
 
