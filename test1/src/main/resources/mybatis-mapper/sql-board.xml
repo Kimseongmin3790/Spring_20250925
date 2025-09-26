@@ -4,14 +4,44 @@
 
 <mapper namespace="com.example.test1.mapper.BoardMapper">
 	<select id="boardList" parameterType="hashmap" resultType="com.example.test1.model.Board">
-		SELECT *
-		FROM TBL_BOARD
+		SELECT B.*, TO_CHAR(CDATETIME, 'YYYY-MM-DD') AS CDATE
+		FROM TBL_BOARD B
+		WHERE 1=1 
+		<if test="kind != '' and kind != null">
+			AND KIND = #{kind}
+		</if>
+		<if test="order == 'no'">
+			ORDER BY BOARDNO ASC
+		</if>
+		<if test="order == 'title'">
+			ORDER BY TITLE ASC
+		</if>
+		<if test="order == 'cnt'">
+			ORDER BY CNT DESC
+		</if>
 	</select>
 	
 	<delete id="boardRemove" parameterType="hashmap">
 		DELETE FROM TBL_BOARD
 		WHERE BOARDNO = #{boardNo}
 	</delete>
+	
+	<insert id="boardInsert" parameterType="hashmap">
+		INSERT INTO TBL_BOARD
+		VALUES(B_SEQ.NEXTVAL, #{title}, #{contents}, #{userId}, 0, 0, #{kind}, SYSDATE, SYSDATE)
+	</insert>
+	
+	<select id="boardInfo" parameterType="hashmap" resultType="com.example.test1.model.Board">
+		SELECT *
+		FROM TBL_BOARD
+		WHERE BOARDNO = #{boardNo}
+	</select>
+	
+	<update id="boardEdit" parameterType="hashmap">
+		UPDATE TBL_BOARD
+		SET TITLE = #{title}, USERID = #{userId}, CONTENTS = #{contents}
+		WHERE BOARDNO = #{boardNo}
+	</update>
 </mapper>
 
 

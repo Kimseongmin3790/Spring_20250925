@@ -25,8 +25,40 @@ public class BoardService {
 		return resultMap;
 	}
 	
-	public void boardRemove(HashMap<String, Object> map) {
+	public HashMap<String, Object> removeBoard(HashMap<String, Object> map) {
+		
+		HashMap<String, Object> resultMap = new HashMap<String, Object>();
+		int cnt = boardmapper.boardRemove(map);
+		
+		resultMap.put("result", "success");
+		return resultMap;
+	}
+
+	public HashMap<String, Object> addBoard(HashMap<String, Object> map) {
 		// TODO Auto-generated method stub
-		boardmapper.boardRemove(map);
+		HashMap<String, Object> resultMap = new HashMap<String, Object>();
+		int cnt = boardmapper.boardInsert(map);
+		
+		resultMap.put("result", "success");
+		return resultMap;
+	}
+	
+	public HashMap<String, Object> getBoardInfo(HashMap<String, Object> map) {
+		// TODO Auto-generated method stub
+		HashMap<String, Object> resultMap = new HashMap<String, Object>();
+		Board board = boardmapper.boardInfo(map);
+		
+		resultMap.put("info", board);
+		resultMap.put("result", "success");
+		return resultMap;
+	}
+	
+	public HashMap<String, Object> editBoard(HashMap<String, Object> map) {
+		// TODO Auto-generated method stub
+		HashMap<String, Object> resultMap = new HashMap<String, Object>();
+		int cnt = boardmapper.boardEdit(map);
+		
+		resultMap.put("result", "success");
+		return resultMap;
 	}
 }
