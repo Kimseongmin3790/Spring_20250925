@@ -33,9 +33,17 @@
             <label>비밀번호 : <input type="password" v-model="pwd"></label>
         </div>
         <div>
-            <label>주소 : <input v-model="addr"> <button @click="fnAddr">주소검색</button></label>
+            주소 : <input v-model="addr"> <button @click="fnAddr">주소검색</button>
         </div>
-        <button @click="fnJoin">가입</button>
+        <div>
+            문자인증 : <input v-model="inputNum" :placeholder="timer"> 
+            <template v-if="!smsFlg"><button @click="fnSms">인증번호 전송</button></template>
+            <template v-else><button>인증</button></template>
+        </div>
+        <div>
+            {{timer}}
+            <button @click="fnTimer">시작</button>
+        </div>
     </div>
 </body>
 </html>
@@ -53,7 +61,10 @@
                 // 변수 - (key : value)
                 id: "",
                 pwd: "",
-                addr: ""
+                addr: "",
+                inputNum: "",
+                smsFlg: false,
+                timer: 180
             };
         },
         methods: {
@@ -96,11 +107,43 @@
             fnResult: function (roadFullAddr, addrDetail, zipNo) {
                 let self = this;
                 self.addr = roadFullAddr;
+            },
+            fnSms : function () {
+                let self = this;
+                let param = {};
+                $.ajax({
+                    url: "/send-one",
+                    dataType: "json",
+                    type: "POST",
+                    data: param,
+                    success: function (data) {
+                        console.log(data);
+                        if(data.res.statusCode == "2000") {
+                            alert("문자 전송 완료");
+                            self.smsFlg = true;
+                            self.fnTimer();
+                        } else {
+                            alert("잠시 후 다시 시도해주세요.");
+                        }
+                    }
+                });
+            },
+            fnTimer: function () {
+                let self = this;
+                let interval = setInterval(function(){
+                    if(self.timer == 0) {
+                        clearInterval(interval);
+                        alert("시간이 만료되었습니다");
+                    } else {
+                        self.timer--;
+                    }
+                }, 1000);
             }
         }, // methods
         mounted() {
             // 처음 시작할 때 실행되는 부분
             let self = this;
+            window.vueObj = this;
         }
     });
 
