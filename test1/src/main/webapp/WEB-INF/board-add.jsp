@@ -39,7 +39,7 @@
                 </tr>
                 <tr>
                     <th>작성자</th>
-                    <td><input type="text" v-model="userId"></td>
+                    <td>{{userId}}</td>
                 </tr>
                 <tr>
                     <th>내용</th>
@@ -58,7 +58,7 @@
             return {
                 // 변수 - (key : value)
                 title: "",
-                userId: "",
+                userId: "${sessionId}",
                 contents: "",
                 kind: ""
             };
@@ -88,6 +88,10 @@
         mounted() {
             // 처음 시작할 때 실행되는 부분
             let self = this;
+            if (!"${sessionId}") {
+                alert("로그인 후 이용해 주세요");
+                location.href="/member/login.do"
+            }
         }
     });
 
