@@ -9,20 +9,17 @@
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="/js/page-change.js"></script>
     <style>
-        table, tr, td, th{
+        #board table, #board tr, #board td, #board th{
             border : 1px solid black;
             border-collapse: collapse;
             padding : 5px 10px;
             text-align: center;
         }
-        th{
+        #board th{
             background-color: beige;
         }
-        tr:nth-child(even){
-            background-color: azure;
-        }
-        td {
-            width: 300px;
+        input{
+            width: 350px;
         }
     </style>
 </head>
@@ -30,7 +27,7 @@
     <div id="app">
         <!-- html 코드는 id가 app인 태그 안에서 작업 -->
          <div>
-             <table>
+             <table id="board">
                 <tr>
                     <th>제목</th>
                     <td>{{info.title}}</td>
@@ -39,13 +36,33 @@
                     <th>작성자</th>
                     <td>{{info.userId}}</td>
                 </tr>
-                <tr style="height: 400px;">
+                <tr>
                     <th>내용</th>
                     <td>{{info.contents}}</td>
                 </tr>
              </table>
          </div>
-         <button @click="fnEdit(boardNo)">수정</button>
+         <div>
+            <button @click="fnEdit(boardNo)">수정</button>
+         </div>
+         <div>
+            <table id="comment">
+                <tr v-for="item in list">
+                    <th>{{item.nickName}}</th>
+                    <td>{{item.contents}}</td>
+                    <td><button>수정</button></td>
+                    <td><button>삭제</button></td>
+                </tr>
+            </table>
+         </div>
+
+         <table id="input">
+            <th>댓글 입력</th>
+            <td>
+                <textarea cols="40" rows="4"></textarea>
+            </td>
+            <td><button>저장</button></td>
+         </table>
     </div>
 </body>
 </html>
@@ -56,7 +73,8 @@
             return {
                 // 변수 - (key : value)
                 boardNo : "${boardNo}", // request.getAttribute(boardNo);
-                info : {}
+                info : {},
+                list : []
             };
         },
         methods: {
@@ -72,7 +90,9 @@
                     type: "POST",
                     data: param,
                     success: function (data) {
+                        console.log(data);
                        self.info = data.info;
+                       self.list = data.commentList;
                     }
                 });
             },

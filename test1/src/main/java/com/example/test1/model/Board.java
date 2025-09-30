@@ -9,6 +9,8 @@ public class Board {
 	private String favorite;
 	private String kind;
 	private String cdate;
+	private String count;
+	private String nickName;
 	public String getBoardNo() {
 		return boardNo;
 	}
@@ -56,5 +58,17 @@ public class Board {
 	}
 	public void setCdate(String cdate) {
 		this.cdate = cdate;
+	}
+	public String getCount() {
+		return count;
+	}
+	public void setCount(String count) {
+		this.count = count;
+	}
+	public String getNickName() {
+		return nickName;
+	}
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
 	}
 }

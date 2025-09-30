@@ -4,12 +4,24 @@
 
 <mapper namespace="com.example.test1.mapper.BoardMapper">
 	<select id="boardList" parameterType="hashmap" resultType="com.example.test1.model.Board">
-		SELECT B.*, TO_CHAR(CDATETIME, 'YYYY-MM-DD') AS CDATE
+		SELECT B.BOARDNO, TITLE, B.USERID, CNT, COUNT(COMMENTNO) AS COUNT, TO_CHAR(B.CDATETIME, 'YYYY-MM-DD') AS CDATE
 		FROM TBL_BOARD B
+		LEFT JOIN TBL_COMMENT C ON B.BOARDNO = C.BOARDNO
 		WHERE 1=1 
 		<if test="kind != '' and kind != null">
 			AND KIND = #{kind}
 		</if>
+		<if test="searchKind == ''">
+			AND 
+			(TITLE LIKE '%' || #{keyword} || '%' OR B.USERID LIKE '%' || #{keyword} || '%')
+		</if>
+		<if test="searchKind == 'title'">
+			AND TITLE LIKE '%' || #{keyword} || '%'
+		</if>
+		<if test="searchKind == 'userId'">
+			AND B.USERID LIKE '%' || #{keyword} || '%'
+		</if>	
+		GROUP BY B.BOARDNO, TITLE, B.USERID, CNT, B.CDATETIME
 		<if test="order == 'no'">
 			ORDER BY BOARDNO ASC
 		</if>
@@ -42,6 +54,14 @@
 		SET TITLE = #{title}, USERID = #{userId}, CONTENTS = #{contents}
 		WHERE BOARDNO = #{boardNo}
 	</update>
+	
+	<select id="boardComment" parameterType="hashmap" resultType="com.example.test1.model.Comment">
+		SELECT C.*, U.NICKNAME
+		FROM TBL_COMMENT C
+		INNER JOIN TBL_USER U ON C.USERID = U.USERID
+		WHERE BOARDNO = #{boardNo}
+	</select>
+	
 </mapper>
 
 

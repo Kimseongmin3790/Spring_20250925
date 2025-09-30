@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.example.test1.model.Board;
+import com.example.test1.model.Comment;
 
 @Mapper
 public interface BoardMapper {
@@ -23,4 +24,7 @@ public interface BoardMapper {
 	
 	// 게시글 수정
 	int boardEdit(HashMap<String, Object> map);
+	
+	// 댓글 목록
+	List<Comment> boardComment(HashMap<String, Object> map);
 }
