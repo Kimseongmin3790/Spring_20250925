@@ -12,4 +12,6 @@ public interface MemberMapper {
 	Member memberLogin(HashMap<String, Object> map);
 	// 중복체크
 	Member idCheck(HashMap<String, Object> map);
+	// 회원가입
+	int memberJoin(HashMap<String, Object> map);
 }

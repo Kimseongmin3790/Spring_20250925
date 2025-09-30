@@ -43,9 +43,10 @@ public class MemberService {
 		
 		Member member = membermapper.idCheck(map);
 		String message = member != null ? "이미 사용중인 아이디 입니다" : "사용 가능한 아이디 입니다";
+		String result = member != null ? "fail" : "success";
 		
 		resultmap.put("msg", message);
-		
+		resultmap.put("result", result);
 		return resultmap;
 	}
 
@@ -60,6 +61,19 @@ public class MemberService {
 //		session.removeAttribute("sessionId"); // 1개씩 삭제
 		
 		session.invalidate(); // 세션정보 전체 삭제
+		
+		return resultmap;
+	}
+	
+	public HashMap<String, Object> join(HashMap<String, Object> map) {
+		HashMap<String, Object> resultmap = new HashMap<String, Object>();
+		
+		int cnt = membermapper.memberJoin(map);
+		if (cnt < 1) {
+			resultmap.put("result", "fail");
+		} else {
+			resultmap.put("result", "success");
+		}
 		
 		return resultmap;
 	}
