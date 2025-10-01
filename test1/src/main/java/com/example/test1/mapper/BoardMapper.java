@@ -36,4 +36,7 @@ public interface BoardMapper {
 	
 	// 조회수 증가
 	int boardCnt(HashMap<String, Object> map);
+	
+	// 게시글 전체 개수
+	int selectBoardCnt(HashMap<String, Object> map);
 }

@@ -28,6 +28,19 @@
             tr:nth-child(even) {
                 background-color: azure;
             }
+
+            #index {
+                margin-right: 10px;
+                text-decoration: none;
+            }
+            .active {
+                color: black;
+                font-weight: bold;
+            }
+            .pageMove {
+                color: black;
+                text-decoration: none;
+            }
         </style>
     </head>
 
@@ -44,6 +57,13 @@
                 <button @click="fnList">검색</button>
             </div>
             <div>
+
+                <select v-model="pageSize" @change="fnList">
+                    <option value="5">5개씩</option>
+                    <option value="10">10개씩</option>
+                    <option value="20">20개씩</option>
+                </select>
+
                 <select v-model="kind" @change="fnList">
                     <option value="">:: 전체 ::</option>
                     <option value="1">:: 공지사항 ::</option>
@@ -82,6 +102,13 @@
                         <td><button @click="fnRemove(item.boardNo)" v-if="sessionId == item.userId || sessionStatus == 'A'">삭제</button></td>
                     </tr>
                 </table>
+                <div>
+                    <a class="pageMove" href="javascript:;" @click="fnMove(-1)" v-if="page > 1">◀</a>
+                    <a id="index" href="javascript:;" v-for="num in index" @click="fnPage(num)">
+                        <span :class="{active : page == num}">{{num}}</span>
+                    </a>
+                    <a class="pageMove" href="javascript:;" v-if="page < index" @click="fnMove(1)">▶</a>
+                </div>
             </div>
             <button @click="fnAdd">글 쓰기</button>
         </div>
@@ -100,7 +127,10 @@
                     sessionId: "${sessionId}",
                     sessionStatus: "${sessionStatus}",
                     keyword: "", // 검색어
-                    searchKind: "" // 검색 옵션 (기본 : 전체)
+                    searchKind: "", // 검색 옵션 (기본 : 전체)
+                    pageSize: "5", // 한페이지에 출력할 개수
+                    page: 1, // 현재 페이지
+                    index: 0 // 최대 페이지 값
                 };
             },
             methods: {
@@ -111,7 +141,9 @@
                         kind: self.kind,
                         order: self.order,
                         keyword: self.keyword,
-                        searchKind: self.searchKind
+                        searchKind: self.searchKind,
+                        pageSize: self.pageSize,
+                        page: (self.page-1) * self.pageSize
                     };
                     $.ajax({
                         url: "board-list.dox",
@@ -119,8 +151,9 @@
                         type: "POST",
                         data: param,
                         success: function (data) {
-                            self.list = data.list;
                             console.log(data);
+                            self.list = data.list;
+                            self.index = Math.ceil(data.cnt / self.pageSize);
                         }
                     });
                 },
@@ -149,6 +182,16 @@
                 fnView: function (boardNo) {
                     let self = this;
                     pageChange("board-view.do", {boardNo : boardNo, userId : self.sessionId});
+                },
+                fnPage: function (num) {
+                    let self = this;
+                    self.page = num;
+                    self.fnList();
+                },
+                fnMove: function (num) {
+                    let self = this;
+                    self.page += num;
+                    self.fnList();
                 }
             }, // methods
             mounted() {

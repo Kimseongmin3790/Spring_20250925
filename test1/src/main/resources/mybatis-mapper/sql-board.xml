@@ -34,6 +34,27 @@
 		<if test="order == 'time'">
 			ORDER BY B.CDATETIME DESC
 		</if>
+		OFFSET #{page} ROWS FETCH NEXT #{pageSize} ROWS ONLY
+	</select>
+	
+	<select id="selectBoardCnt" parameterType="hashmap" resultType="int">
+		SELECT COUNT(*)
+		FROM TBL_BOARD B
+		WHERE 1=1 
+		<if test="kind != '' and kind != null">
+			AND KIND = #{kind}
+		</if>
+		<if test="searchKind == ''">
+			AND 
+			(TITLE LIKE '%' || #{keyword} || '%' OR B.USERID LIKE '%' || #{keyword} || '%')
+		</if>
+		<if test="searchKind == 'title'">
+			AND TITLE LIKE '%' || #{keyword} || '%'
+		</if>
+		<if test="searchKind == 'userId'">
+			AND B.USERID LIKE '%' || #{keyword} || '%'
+		</if>
+		
 	</select>
 	
 	<delete id="boardRemove" parameterType="hashmap">
