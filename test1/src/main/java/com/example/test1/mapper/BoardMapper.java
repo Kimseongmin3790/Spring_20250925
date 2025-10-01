@@ -27,4 +27,13 @@ public interface BoardMapper {
 	
 	// 댓글 목록
 	List<Comment> boardComment(HashMap<String, Object> map);
+	
+	// 댓글 등록
+	int commentInsert(HashMap<String, Object> map);
+	
+	// 댓글 삭제
+	int commentDelete(HashMap<String, Object> map);
+	
+	// 조회수 증가
+	int boardCnt(HashMap<String, Object> map);
 }

@@ -47,6 +47,7 @@ public class BoardService {
 	public HashMap<String, Object> getBoardInfo(HashMap<String, Object> map) {
 		// TODO Auto-generated method stub
 		HashMap<String, Object> resultMap = new HashMap<String, Object>();
+		int cnt = boardmapper.boardCnt(map);
 		Board board = boardmapper.boardInfo(map);
 		List<Comment> commentList = boardmapper.boardComment(map);
 		
@@ -60,6 +61,32 @@ public class BoardService {
 		// TODO Auto-generated method stub
 		HashMap<String, Object> resultMap = new HashMap<String, Object>();
 		int cnt = boardmapper.boardEdit(map);
+		
+		resultMap.put("result", "success");
+		return resultMap;
+	}
+	
+	public HashMap<String, Object> addComment(HashMap<String, Object> map) {
+		// TODO Auto-generated method stub
+		HashMap<String, Object> resultMap = new HashMap<String, Object>();
+		
+		try {
+			int cnt = boardmapper.commentInsert(map);
+			resultMap.put("result", "success");
+			resultMap.put("msg", "댓글이 등록되었습니다.");
+		} catch (Exception e) {
+			// TODO: handle exception
+			resultMap.put("result", "fail");
+			resultMap.put("msg", "서버 오류가 발생했습니다. 다시 시도해주세요.");
+		}
+		
+		return resultMap;
+	}
+	
+	public HashMap<String, Object> RemoveComment(HashMap<String, Object> map) {
+		// TODO Auto-generated method stub
+		HashMap<String, Object> resultMap = new HashMap<String, Object>();
+		int cnt = boardmapper.commentDelete(map);
 		
 		resultMap.put("result", "success");
 		return resultMap;

@@ -4,7 +4,7 @@
 
 <mapper namespace="com.example.test1.mapper.BoardMapper">
 	<select id="boardList" parameterType="hashmap" resultType="com.example.test1.model.Board">
-		SELECT B.BOARDNO, TITLE, B.USERID, CNT, COUNT(COMMENTNO) AS COUNT, TO_CHAR(B.CDATETIME, 'YYYY-MM-DD') AS CDATE
+		SELECT B.BOARDNO, TITLE, B.USERID, CNT, COUNT(COMMENTNO) AS COUNT, DECODE(TO_CHAR(B.CDATETIME, 'YYYY-MM-DD'), TO_CHAR(SYSDATE, 'YYYY-MM-DD'), TO_CHAR(B.CDATETIME, 'HH24:MI:SS'), TO_CHAR(B.CDATETIME, 'YYYY-MM-DD')) AS CDATE
 		FROM TBL_BOARD B
 		LEFT JOIN TBL_COMMENT C ON B.BOARDNO = C.BOARDNO
 		WHERE 1=1 
@@ -30,6 +30,9 @@
 		</if>
 		<if test="order == 'cnt'">
 			ORDER BY CNT DESC
+		</if>
+		<if test="order == 'time'">
+			ORDER BY B.CDATETIME DESC
 		</if>
 	</select>
 	
@@ -60,7 +63,22 @@
 		FROM TBL_COMMENT C
 		INNER JOIN TBL_USER U ON C.USERID = U.USERID
 		WHERE BOARDNO = #{boardNo}
+		ORDER BY C.CDATETIME ASC
 	</select>
+	
+	<insert id="commentInsert" parameterType="hashmap">
+		INSERT INTO TBL_COMMENT
+		VALUES(COMMENT_SEQ.NEXTVAL, #{boardNo}, #{contents}, #{userId}, 0, NULL, SYSDATE, SYSDATE)
+	</insert>
+	
+	<delete id="commentDelete" parameterType="hashmap">
+		DELETE FROM TBL_COMMENT
+		WHERE COMMENTNO = #{commentNo}
+	</delete>
+	
+	<update id="boardCnt" parameterType="hashmap">
+		UPDATE TBL_BOARD SET CNT = CNT + 1 WHERE BOARDNO = #{boardNo}
+	</update>
 	
 </mapper>
 

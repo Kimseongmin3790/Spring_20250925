@@ -9,13 +9,12 @@
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="/js/page-change.js"></script>
     <style>
-        #board table, #board tr, #board td, #board th{
+        #board table, tr, td, th{
             border : 1px solid black;
             border-collapse: collapse;
             padding : 5px 10px;
-            text-align: center;
         }
-        #board th{
+        th{
             background-color: beige;
         }
         input{
@@ -37,6 +36,10 @@
                     <td>{{info.userId}}</td>
                 </tr>
                 <tr>
+                    <th>조회수</th>
+                    <td>{{info.cnt}}</td>
+                </tr>
+                <tr>
                     <th>내용</th>
                     <td>{{info.contents}}</td>
                 </tr>
@@ -51,7 +54,7 @@
                     <th>{{item.nickName}}</th>
                     <td>{{item.contents}}</td>
                     <td><button>수정</button></td>
-                    <td><button>삭제</button></td>
+                    <td><button @click="fnCommentRemove(item.commentNo)">삭제</button></td>
                 </tr>
             </table>
          </div>
@@ -59,9 +62,9 @@
          <table id="input">
             <th>댓글 입력</th>
             <td>
-                <textarea cols="40" rows="4"></textarea>
+                <textarea cols="40" rows="4" v-model="commentContents"></textarea>
             </td>
-            <td><button>저장</button></td>
+            <td><button @click="fnCommentAdd">저장</button></td>
          </table>
     </div>
 </body>
@@ -74,7 +77,9 @@
                 // 변수 - (key : value)
                 boardNo : "${boardNo}", // request.getAttribute(boardNo);
                 info : {},
-                list : []
+                list : [],
+                id : "${sessionId}",
+                commentContents: ""
             };
         },
         methods: {
@@ -98,6 +103,48 @@
             },
             fnEdit: function (boardNo) {
                 pageChange("board-edit.do", {boardNo : boardNo});
+            },
+            fnCommentAdd: function () {
+                let self = this;
+                let param = {
+                    boardNo: self.boardNo,
+                    userId: self.id,
+                    contents: self.commentContents
+                };
+                $.ajax({
+                    url: "/comment/add.dox",
+                    dataType: "json",
+                    type: "POST",
+                    data: param,
+                    success: function (data) {
+                        alert(data.msg);
+                        self.commentContents = "";
+                        self.fnInfo();
+                    }
+                });
+            },
+            fnCommentRemove: function (commentNo) {
+                let self = this;
+                if(!confirm("댓글을 삭제하시겠습니까?")) {
+                    return;
+                }
+                let param = {
+                    commentNo: commentNo
+                };
+                $.ajax({
+                    url: "board-commentRemove.dox",
+                    dataType: "json",
+                    type: "POST",
+                    data: param,
+                    success: function (data) {
+                        if(data.result == "success") {
+                            alert("댓글이 삭제되었습니다");
+                            self.fnInfo();
+                        } else {
+                            alert("오류 발생")
+                        }
+                    }
+                });
             }
         }, // methods
         mounted() {

@@ -54,7 +54,8 @@
                 <select v-model="order" @change="fnList">
                     <option value="no">:: 번호순 ::</option>
                     <option value="title">:: 제목순 ::</option>
-                    <option value="cnt">:: 조회수 ::</option>
+                    <option value="cnt">:: 조회순 ::</option>
+                    <option value="time">:: 시간순 ::</option>
                 </select>
             </div>
             <div>
@@ -95,7 +96,7 @@
                     // 변수 - (key : value)
                     list: [],
                     kind: "",
-                    order: "no",
+                    order: "time",
                     sessionId: "${sessionId}",
                     sessionStatus: "${sessionStatus}",
                     keyword: "", // 검색어
@@ -119,6 +120,7 @@
                         data: param,
                         success: function (data) {
                             self.list = data.list;
+                            console.log(data);
                         }
                     });
                 },
@@ -145,7 +147,8 @@
                     location.href="board-add.do";
                 },
                 fnView: function (boardNo) {
-                    pageChange("board-view.do", {boardNo : boardNo});
+                    let self = this;
+                    pageChange("board-view.do", {boardNo : boardNo, userId : self.sessionId});
                 }
             }, // methods
             mounted() {
