@@ -75,6 +75,12 @@ public class MemberService {
 			resultmap.put("result", "success");
 		}
 		
+		resultmap.put("userId", map.get("userId"));
 		return resultmap;
+	}
+
+	public void addUserImg(HashMap<String, Object> map) {
+		// TODO Auto-generated method stub
+		membermapper.insertUserImg(map);
 	}
 }

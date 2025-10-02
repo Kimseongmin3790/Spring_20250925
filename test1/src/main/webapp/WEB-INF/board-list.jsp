@@ -81,6 +81,7 @@
             <div>
                 <table>
                     <tr>
+                        <th><input type="checkbox" @click="fnAllCheck"></th>
                         <th>번호</th>
                         <th>제목</th>
                         <th>작성자</th>
@@ -89,6 +90,7 @@
                         <th>삭제</th>
                     </tr>
                     <tr v-for="item in list">
+                        <td><input type="checkbox" :value="item.boardNo" v-model="selectItem"></td>
                         <td>{{item.boardNo}}</td>
                         <td>
                             <a href="javascript:;" @click="fnView(item.boardNo)">
@@ -102,6 +104,9 @@
                         <td><button @click="fnRemove(item.boardNo)" v-if="sessionId == item.userId || sessionStatus == 'A'">삭제</button></td>
                     </tr>
                 </table>
+                <div>
+                    <button @click="fnCheckRemove">삭제</button>
+                </div>
                 <div>
                     <a class="pageMove" href="javascript:;" @click="fnMove(-1)" v-if="page > 1">◀</a>
                     <a id="index" href="javascript:;" v-for="num in index" @click="fnPage(num)">
@@ -130,7 +135,9 @@
                     searchKind: "", // 검색 옵션 (기본 : 전체)
                     pageSize: "5", // 한페이지에 출력할 개수
                     page: 1, // 현재 페이지
-                    index: 0 // 최대 페이지 값
+                    index: 0, // 최대 페이지 값
+                    selectItem: [],
+                    check: false
                 };
             },
             methods: {
@@ -192,6 +199,33 @@
                     let self = this;
                     self.page += num;
                     self.fnList();
+                },
+                fnAllCheck: function() {
+                    let self = this;
+                    self.check = !self.check;
+                    if(self.check) {
+                        self.selectItem = [];
+                        for (let i = 0; i < self.list.length; i++) {
+                            self.selectItem.push(self.list[i].boardNo);                            
+                        }
+                    } else {
+                        self.selectItem = [];
+                    }
+                },
+                fnCheckRemove: function () {
+                    let self = this;
+                    var fList = JSON.stringify(self.selectItem);
+                    var param = {selectItem : fList};
+                    $.ajax({
+                        url: "board/deleteList.dox",
+                        dataType: "json",
+                        type: "POST",
+                        data: param,
+                        success: function (data) {
+                            alert("삭제되었습니다!");
+                            self.fnList();
+                        }
+                    });
                 }
             }, // methods
             mounted() {

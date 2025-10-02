@@ -7,9 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.test1.mapper.StuMapper;
-import com.example.test1.mapper.UserMapper;
 import com.example.test1.model.Student;
-import com.example.test1.model.User;
 
 @Service
 public class StuService {
@@ -58,6 +56,15 @@ public class StuService {
 		Student stu = stuMapper.getStudent(map);
 		
 		resultMap.put("info", stu);
+		resultMap.put("result", "success");
+		return resultMap;
+	}
+	
+	public HashMap<String, Object> removeStudentList(HashMap<String, Object> map) {
+		// TODO Auto-generated method stub
+		HashMap<String, Object> resultMap = new HashMap<String, Object>();
+		int cnt = stuMapper.deleteStudentList(map);
+		
 		resultMap.put("result", "success");
 		return resultMap;
 	}

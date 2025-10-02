@@ -15,9 +15,14 @@
 		WHERE USERID = #{id}
 	</select>
 	
-	<insert id="memberJoin" parameterType="hashmap">
+	<insert id="memberJoin" parameterType="hashmap" useGeneratedKeys="true" keyColumn="USERID" keyProperty="userId">
 		INSERT INTO TBL_USER (USERID, PASSWORD, NAME, ADDRESS, PHONE, GENDER, STATUS)
 		VALUES(#{id}, #{pwd}, #{name}, #{addr}, #{phone}, #{gender}, #{status})
+	</insert>
+	
+	<insert id="insertUserImg" parameterType="hashmap">
+		INSERT INTO TBL_USER_FILE
+		VALUES(USERFILE_SEQ.NEXTVAL, #{userId}, #{path}, #{fileName}, #{orgName}, #{size}, #{ext})
 	</insert>
 </mapper>
 

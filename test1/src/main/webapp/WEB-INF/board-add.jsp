@@ -47,6 +47,10 @@
                     <td>{{userId}}</td>
                 </tr>
                 <tr>
+                    <th>파일첨부</th>
+                    <td><input type="file" id="file1" name="file1" accept=".jpg, .png"></td>
+                </tr>
+                <tr>
                     <th>내용</th>
                     <td><textarea v-model="contents" style="width: 380px; height: 400px;"></textarea></td>
                 </tr>
@@ -85,8 +89,27 @@
                     data: param,
                     success: function (data) {
                         alert("추가되었습니다");
-                        location.href="board-list.do"
+                        console.log(data.boardNo);
+                        var form = new FormData();
+                        form.append( "file1",  $("#file1")[0].files[0] );
+                        form.append( "boardNo",  data.boardNo);
+                        self.upload(form); 
+                        // location.href="board-list.do"
                     }
+                });
+
+            },
+            upload : function(form){
+                var self = this;
+                $.ajax({
+                    url : "/fileUpload.dox", 
+                    type : "POST", 
+                    processData : false, 
+                    contentType : false, 
+                    data : form, 
+                    success:function(data) { 
+                        console.log(data);
+                    }	           
                 });
             }
         }, // methods

@@ -14,4 +14,6 @@ public interface MemberMapper {
 	Member idCheck(HashMap<String, Object> map);
 	// 회원가입
 	int memberJoin(HashMap<String, Object> map);
+	// 프로필 이미지 등록
+	int insertUserImg(HashMap<String, Object> map);
 }

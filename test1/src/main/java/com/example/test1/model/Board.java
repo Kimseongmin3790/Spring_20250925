@@ -11,6 +11,11 @@ public class Board {
 	private String cdate;
 	private String count;
 	private String nickName;
+	
+	private String fileNo;
+	private String filePath;
+	private String fileName;
+	
 	public String getBoardNo() {
 		return boardNo;
 	}
@@ -70,5 +75,23 @@ public class Board {
 	}
 	public void setNickName(String nickName) {
 		this.nickName = nickName;
+	}
+	public String getFileNo() {
+		return fileNo;
+	}
+	public void setFileNo(String fileNo) {
+		this.fileNo = fileNo;
+	}
+	public String getFilePath() {
+		return filePath;
+	}
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+	}
+	public String getFileName() {
+		return fileName;
+	}
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 }

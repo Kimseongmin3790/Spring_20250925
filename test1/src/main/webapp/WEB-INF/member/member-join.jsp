@@ -62,6 +62,9 @@
             문자인증이 완료되었습니다.
         </div>
         <div>
+            프로필 이미지 : <input type="file" id="file1" name="file1">
+        </div>
+        <div>
             성별 : 
             <label><input type="radio" v-model="gender" value="M"> 남자</label>
             <label><input type="radio" v-model="gender" value="F"> 여자</label>
@@ -258,11 +261,28 @@
                     success: function (data) {
                         if(data.result == "success") {
                             alert("가입되었습니다");
-                            location.href="/member/login.do";
+                            var form = new FormData();
+                            form.append( "file1",  $("#file1")[0].files[0] );
+                            form.append( "userId",  data.userId);
+                            self.upload(form);
+                            // location.href="/member/login.do";
                         } else {
                             alert("가입 실패");
                         }
                     }
+                });
+            },
+            upload : function(form){
+                var self = this;
+                $.ajax({
+                    url : "/userFileUpload.dox", 
+                    type : "POST", 
+                    processData : false, 
+                    contentType : false, 
+                    data : form, 
+                    success:function(data) { 
+                        console.log(data);
+                    }	           
                 });
             },
             fnSmsAuth: function () {

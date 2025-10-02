@@ -10,6 +10,12 @@
 		<if test="si != '' and si != null">
 			AND SI = #{si}
 		</if>
+		<if test="gu != '' and si != null">
+			AND GU = #{gu}
+		</if>
+		<if test="dong != ''">
+			AND DONG = #{dong}
+		</if>
 		OFFSET #{page} ROWS FETCH NEXT #{pageSize} ROWS ONLY
 	</select>
 	
@@ -20,12 +26,31 @@
 		<if test="si != '' and si != null">
 			AND SI = #{si}
 		</if>
+		<if test="gu != ''">
+			AND GU = #{gu}
+		</if>
+		<if test="dong != ''">
+			AND DONG = #{dong}
+		</if>
 	</select>
 	
 	<select id="selectSiList" parameterType="hashmap" resultType="com.example.test1.model.Area">
 		SELECT *
 		FROM AREA
 		WHERE GU IS NULL
+	</select>
+	
+	<select id="selectGuList" parameterType="hashmap" resultType="com.example.test1.model.Area">
+		SELECT GU
+		FROM AREA
+		WHERE GU IS NOT NULL AND DONG IS NULL AND SI = #{si}
+	</select>
+		
+	<select id="selectDongList" parameterType="hashmap" resultType="com.example.test1.model.Area">
+		SELECT *
+		FROM AREA
+		WHERE GU IS NOT NULL AND DONG IS NOT NULL
+		AND SI = #{si} AND GU = #{gu}
 	</select>
 </mapper>
 

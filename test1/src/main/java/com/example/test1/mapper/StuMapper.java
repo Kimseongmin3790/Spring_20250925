@@ -6,7 +6,6 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.example.test1.model.Student;
-import com.example.test1.model.User;
 
 @Mapper
 public interface StuMapper {
@@ -22,4 +21,7 @@ public interface StuMapper {
 	
 	// 학생의 정보 출력 (시험평균점수 포함)
 	Student getStudent(HashMap<String, Object> map);
+	
+	// 학생 여러명 삭제
+	int deleteStudentList(HashMap<String, Object> map);
 }

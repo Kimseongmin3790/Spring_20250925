@@ -39,10 +39,21 @@
         <!-- html 코드는 id가 app인 태그 안에서 작업 -->
          <div>
             도/특별시 :
-            <select v-model="si" @change="fnList(1)">
+            <select v-model="si" @change="fnGuList">
                 <option value="">:: 전체 ::</option>
                 <option :value="item.si" v-for="item in siList">{{item.si}}</option>
             </select>
+            구 :
+            <select v-model="gu" @change="fnDongList">                
+                <option value="">:: 선택 ::</option>
+                <option :value="item.gu" v-for="item in guList">{{item.gu}}</option>
+            </select>
+            동 :
+            <select v-model="dong">
+                <option value="">:: 선택 ::</option>
+                <option :value="item.dong" v-for="item in dongList">{{item.dong}}</option>
+            </select>
+            <button @click="fnList(1)">검색</button>
          </div>
          <div>
              <table>
@@ -83,7 +94,11 @@
                 pageSize: "20",
                 index: 0,
                 siList: [],
-                si: "" // 선택한 시(도)의 값
+                si: "", // 선택한 시(도)의 값
+                guList: [],
+                gu: "", // 선택한 시의 구 값
+                dongList: [],
+                dong: ""
             };
         },
         methods: {
@@ -96,7 +111,9 @@
                 let param = {
                     pageSize: self.pageSize,
                     page: (self.page-1) * self.pageSize,
-                    si: self.si
+                    si: self.si,
+                    gu: self.gu,
+                    dong: self.dong
                 };
                 $.ajax({
                     url: "/area/list.dox",
@@ -130,6 +147,39 @@
                     data: param,
                     success: function (data) {                        
                         self.siList = data.list;
+                    }
+                });
+            },
+            fnGuList: function () {
+                let self = this;
+                let param = {
+                    si: self.si
+                };
+                $.ajax({
+                    url: "/area/gu.dox",
+                    dataType: "json",
+                    type: "POST",
+                    data: param,
+                    success: function (data) {        
+                        self.gu = "";             
+                        self.dong = "";   
+                        self.guList = data.list;
+                    }
+                });
+            },
+            fnDongList: function () {
+                let self = this;
+                let param = {
+                    si: self.si,
+                    gu: self.gu
+                };
+                $.ajax({
+                    url: "/area/dong.dox",
+                    dataType: "json",
+                    type: "POST",
+                    data: param,
+                    success: function (data) {        
+                        self.dongList = data.list;
                     }
                 });
             }

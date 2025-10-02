@@ -39,4 +39,13 @@ public interface BoardMapper {
 	
 	// 게시글 전체 개수
 	int selectBoardCnt(HashMap<String, Object> map);
+	
+	// 게시글 여러개 삭제
+	int deleteBoardList(HashMap<String, Object> map);
+	
+	// 첨부파일(이미지) 업로드
+	int insertBoardImg(HashMap<String, Object> map);
+	
+	// 첨부파일 목록
+	List<Board> selectFileList(HashMap<String, Object> map);
 }

@@ -26,6 +26,14 @@
 		GROUP BY S.STU_NO, S.STU_NAME, S.STU_DEPT
 		HAVING S.STU_NO = #{stuNo}
 	</select>
+	
+	<delete id="deleteStudentList" parameterType="hashmap">
+		DELETE FROM STUDENT
+		WHERE STU_NO IN
+		<foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+	</delete>
 </mapper>
 
 

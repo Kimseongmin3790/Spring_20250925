@@ -18,4 +18,10 @@ public interface AreaMapper {
 	
 	// 시 목록
 	List<Area> selectSiList(HashMap<String, Object> map);
+	
+	// 구 목록
+	List<Area> selectGuList(HashMap<String, Object> map);
+	
+	// 동 목록
+	List<Area> selectDongList(HashMap<String, Object> map);
 }
