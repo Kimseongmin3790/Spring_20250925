@@ -1,6 +1,7 @@
 package com.example.test1.dao;
 
 import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
@@ -21,15 +22,41 @@ public class MemberService {
 	
 	public HashMap<String, Object> login(HashMap<String, Object> map) {
 		HashMap<String, Object> resultmap = new HashMap<String, Object>();
-		
+				
 		Member member = membermapper.memberLogin(map);
-		String message = member != null ? "로그인 성공" : "로그인 실패";
-		String result = member != null ? "success" : "fail";
 		
-		if(member != null) {
+		String message = "";
+		String result = "";
+		
+		if (member != null && member.getCnt() >= 5) {
+			message = "비밀번호를 5회 이상 잘못 입력하셨습니다.";
+			result = "fail";
+		} else if(member != null) {
+			message = "로그인 성공";
+			result = "success";
+			int cnt = membermapper.loginInit(map);
 			session.setAttribute("sessionId", member.getUserId());
 			session.setAttribute("sessionName", member.getName());
 			session.setAttribute("sessionStatus", member.getStatus());
+			if(member.getStatus().equals("A")) {
+				resultmap.put("url", "/mgr/member/list.do");
+			} else {
+				resultmap.put("url", "/main.do");
+			}
+			
+		} else {
+			Member idCheck = membermapper.idCheck(map);
+			if (idCheck != null) {
+				if(idCheck.getCnt() >= 5) {
+					message = "비밀번호를 5회 이상 잘못 입력하셨습니다.";
+				} else {
+					membermapper.loginFail(map);
+					message = "패스워드를 확인해주세요";
+				}
+				
+			} else {
+				message = "아이디가 존재하지 않습니다";
+			}
 		}
 		
 		resultmap.put("msg", message);
@@ -76,6 +103,53 @@ public class MemberService {
 		}
 		
 		resultmap.put("userId", map.get("userId"));
+		return resultmap;
+	}
+	
+	public HashMap<String, Object> getMemberList(HashMap<String, Object> map) {
+		HashMap<String, Object> resultmap = new HashMap<String, Object>();
+		
+		try {
+			List<Member> list = membermapper.memberList(map);
+			resultmap.put("list", list);
+			resultmap.put("result", "success");
+		} catch (Exception e) {
+			// TODO: handle exception
+			resultmap.put("result", "fail");
+			System.out.println(e.getMessage());
+		}
+		
+		return resultmap;
+	}
+	
+	public HashMap<String, Object> loginReset(HashMap<String, Object> map) {
+		HashMap<String, Object> resultmap = new HashMap<String, Object>();
+		
+		try {
+			int cnt = membermapper.loginInit(map);
+			resultmap.put("result", "success");
+		} catch (Exception e) {
+			// TODO: handle exception
+			resultmap.put("result", "fail");
+			System.out.println(e.getMessage());
+		}
+		
+		return resultmap;
+	}
+	
+	public HashMap<String, Object> getMemberInfo(HashMap<String, Object> map) {
+		HashMap<String, Object> resultmap = new HashMap<String, Object>();
+		
+		try {
+			Member member = membermapper.idCheck(map);
+			resultmap.put("info", member);
+			resultmap.put("result", "success");
+		} catch (Exception e) {
+			// TODO: handle exception
+			resultmap.put("result", "fail");
+			System.out.println(e.getMessage());
+		}
+		
 		return resultmap;
 	}
 
