@@ -8,6 +8,7 @@
     <script src="https://code.jquery.com/jquery-3.7.1.js"
         integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="/js/page-change.js"></script>
     <title>쇼핑몰 헤더</title>
     <link rel="stylesheet" href="/css/product-style.css">
 </head>
@@ -37,8 +38,8 @@
                 <button><a href="/product/add.do">등록</a></button>
             </div>
             <div class="search-bar">
-                <input type="text" placeholder="상품을 검색하세요..." v-model="keyword" @keyup.enter="fnList">
-                <button @click="fnList">검색</button>
+                <input type="text" placeholder="상품을 검색하세요..." v-model="keyword" @keyup.enter="fnList('', '')">
+                <button @click="fnList('', '')">검색</button>
             </div>
             <div class="login-btn">
                 <button>로그인</button>
@@ -49,8 +50,8 @@
             <section class="product-list">
                 <!-- 제품 항목 -->
                 <div class="product-item" v-for="item in list">
-                    <img :src="item.filePath">
-                    <h3>{{item.foodName}}</h3>
+                    <a href="javascript:;" @click="fnView(item.foodNo)"><img :src="item.filePath"></a>
+                    <h3><a href="javascript:;" @click="fnView(item.foodNo)">{{item.foodName}}</a></h3>
                     <p>{{item.foodInfo}}</p>
                     <p class="price">₩{{item.price.toLocaleString()}}</p>
                 </div>
@@ -89,6 +90,10 @@
                         }                        
                     }
                 });
+            },
+            fnView(foodNo) {
+                let self = this;
+                pageChange("/product/view.do", {foodNo : foodNo});
             }
         },
         mounted() {

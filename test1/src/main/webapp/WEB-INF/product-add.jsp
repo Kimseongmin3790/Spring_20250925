@@ -17,9 +17,6 @@
         th{
             background-color: beige;
         }
-        tr:nth-child(even){
-            background-color: azure;
-        }
     </style>
 </head>
 <body>
@@ -30,18 +27,24 @@
                 <tr>
                     <th>종류</th>
                     <td>
-                        <span v-for="item in list">
-                           <label><input type="radio" v-model="menuPart" :value="item.menuNo" @click="fnSelect(item.menuName)">{{item.menuName}}</label>
-                        </span>
+                        <select v-model="menuPart">
+                            <option v-for="item in menuList" :value="item.menuNo">
+                                {{item.menuName}}
+                            </option>
+                        </select>
                     </td>
                 </tr>
                 <tr>
-                    <th>이름</th>
+                    <th>제품번호</th>
+                    <td><input type="text" v-model="menuNo"></td>
+                </tr>
+                <tr>
+                    <th>음식명</th>
                     <td><input type="text" v-model="foodName"></td>
                 </tr>
                 <tr>
-                    <th>설명</th>
-                    <td><textarea v-model="foodInfo"></textarea></td>
+                    <th>음식 설명</th>
+                    <td><textarea v-model="foodInfo" cols="23" rows="5"></textarea></td>
                 </tr>
                 <tr>
                     <th>가격</th>
@@ -54,7 +57,7 @@
             </table>
         </div>
         <div>
-            <button @click="fnAdd">등록</button>
+            <button @click="fnAdd">제품 등록</button>
         </div>
     </div>
 </body>
@@ -65,37 +68,40 @@
         data() {
             return {
                 // 변수 - (key : value)
-                list: [],
-                menuPart: "10",
+                menuList: [],
                 foodName: "",
                 foodInfo: "",
                 price: "",
-                foodKind: ""
+                menuPart: "10",
+                menuNo: ""
             };
         },
         methods: {
             // 함수(메소드) - (key : function())
             fnList: function () {
                 let self = this;
-                let param = {};
+                let param = {
+                    depth : 1
+                };
                 $.ajax({
-                    url: "/product/kind.dox",
+                    url: "/product/menu.dox",
                     dataType: "json",
                     type: "POST",
                     data: param,
                     success: function (data) {
-                        self.list = data.list;
+                        console.log(data)
+                        self.menuList = data.menuList;
                     }
                 });
             },
             fnAdd() {
                 let self = this;
                 let param = {
-                    menuPart: self.menuPart,
                     foodName: self.foodName,
                     foodInfo: self.foodInfo,
                     price: self.price,
-                    foodKind: self.foodKind
+                    menuPart: self.menuPart,
+                    menuNo: self.menuNo
                 };
                 $.ajax({
                     url: "/product/add.dox",
@@ -103,13 +109,32 @@
                     type: "POST",
                     data: param,
                     success: function (data) {
-                        
+                        console.log(data)
+                        if(data.result == "success") {
+                            alert("추가되었습니다");
+                            var form = new FormData();
+                            form.append( "file1",  $("#file1")[0].files[0] );
+                            form.append( "foodNo",  data.foodNo);
+                            self.upload(form); 
+                            location.href="/product.do";
+                        } else {
+                            alert("오류 발생")
+                        }                                                
                     }
                 });
             },
-            fnSelect(menuName) {
-                let self = this;
-                self.foodKind = menuName;
+            upload : function(form){
+                var self = this;
+                $.ajax({
+                    url : "/product/fileUpload.dox", 
+                    type : "POST", 
+                    processData : false, 
+                    contentType : false, 
+                    data : form, 
+                    success:function(data) { 
+                        console.log(data);
+                    }	           
+                });
             }
         }, // methods
         mounted() {

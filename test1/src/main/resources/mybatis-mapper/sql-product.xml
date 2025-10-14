@@ -28,19 +28,28 @@
 		    INNER JOIN TBL_MENU M2 ON M1.MENU_NO = M2.MENU_PART
 		    GROUP BY M1.MENU_NO
 		) T ON M.MENU_NO = T.MENU_NO
-		ORDER BY M.MENU_NO
+		<if test="depth != null and depth != ''">
+			WHERE DEPTH = #{depth}
+		</if>
 	</select>
 	
-	<select id="selectFoodKind" parameterType="hashmap" resultType="com.example.test1.model.Menu">
-		SELECT * 
-		FROM TBL_MENU
-		WHERE DEPTH = 1
-	</select>
-	
-	<insert id="insertFood" parameterType="hashmap">
+	<insert id="insertFood" parameterType="hashmap" useGeneratedKeys="true" keyColumn="FOOD_NO" keyProperty="foodNo">
 		INSERT INTO TBL_FOOD
-		VALUES(FOOD_SEQ.NEXTVAL, #{foodName}, #{price}, #{foodKind}, #{foodInfo}, 'Y', null, #{menuPart})
+		VALUES(FOOD_SEQ.NEXTVAL, #{foodName}, #{price}, null, #{foodInfo}, 'Y', #{menuNo}, #{menuPart})
 	</insert>
+	
+	<insert id="insertFoodImg" parameterType="hashmap">
+		INSERT INTO TBL_FOOD_IMG
+		VALUES(FOODFILE_SEQ.NEXTVAL, #{foodNo}, #{path}, #{fileName}, #{orgName}, #{size}, #{ext}, 'Y')
+	</insert>
+	
+	<select id="selectFoodInfo" parameterType="hashmap" resultType="com.example.test1.model.Product">
+		SELECT *
+		FROM TBL_FOOD F
+		INNER JOIN TBL_FOOD_IMG I ON F.FOOD_NO = I.FOOD_NO
+		INNER JOIN TBL_MENU M ON F.MENU_PART = M.MENU_NO
+		WHERE F.FOOD_NO = #{foodNo}
+	</select>
 </mapper>
 
 

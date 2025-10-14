@@ -16,6 +16,12 @@ public interface ProductMapper {
 	// 메뉴 목록
 	List<Menu> selectMenuList(HashMap<String, Object> map);
 	
-	// 음식 종류
-	List<Menu> selectFoodKind(HashMap<String, Object> map);
+	// 음식 추가
+	int insertFood(HashMap<String, Object> map);
+	
+	// 음식 이미지 추가
+	int insertFoodImg(HashMap<String, Object> map);
+	
+	// 음식 상세정보
+	Product selectFoodInfo(HashMap<String, Object> map);
 }
