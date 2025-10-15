@@ -14,6 +14,6 @@ public class MapController {
 	
 	@RequestMapping("/map2.do") 
     public String map2(Model model) throws Exception{
-        return "/map/map2";
+        return "/map/map3";
     }
 }

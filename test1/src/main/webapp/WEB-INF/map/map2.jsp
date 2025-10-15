@@ -220,7 +220,8 @@
             data() {
                 return {
                     // 변수 - (key : value)
-                    placeoverlay: ""
+                    placeOverlay: null,
+                    map: ""
                 };
             },
             methods: {
@@ -241,10 +242,10 @@
                     }
 
                     // 커스텀 오버레이를 숨깁니다 
-                    this.placeOverlay.setMap(null);
+                    placeOverlay.setMap(null);
 
                     // 지도에 표시되고 있는 마커를 제거합니다
-                    this.removeMarker();
+                    removeMarker();
 
                     ps.categorySearch(currCategory, placesSearchCB, { useMapBounds: true });
                 },
@@ -334,8 +335,8 @@
                         '<div class="after"></div>';
 
                     contentNode.innerHTML = content;
-                    this.placeOverlay.setPosition(new kakao.maps.LatLng(place.y, place.x));
-                    this.placeOverlay.setMap(map);
+                    placeOverlay.setPosition(new kakao.maps.LatLng(place.y, place.x));
+                    placeOverlay.setMap(map);
                 },
 
 
@@ -345,7 +346,7 @@
                         children = category.children;
 
                     for (var i = 0; i < children.length; i++) {
-                        children[i].onclick = this.onClickCategory;
+                        children[i].onclick = onClickCategory;
                     }
                 },
 
@@ -354,16 +355,16 @@
                     var id = this.id,
                         className = this.className;
 
-                    this.placeOverlay.setMap(null);
+                    placeOverlay.setMap(null);
 
                     if (className === 'on') {
                         currCategory = '';
-                        this.changeCategoryClass();
-                        this.removeMarker();
+                        changeCategoryClass();
+                        removeMarker();
                     } else {
                         currCategory = id;
-                        this.changeCategoryClass(this);
-                        this.searchPlaces();
+                        changeCategoryClass(this);
+                        searchPlaces();
                     }
                 },
 
@@ -386,8 +387,8 @@
                 // 처음 시작할 때 실행되는 부분
                 let self = this;
                 // 마커를 클릭했을 때 해당 장소의 상세정보를 보여줄 커스텀오버레이입니다
-                self.placeOverlay = new kakao.maps.CustomOverlay({ zIndex: 1 }),
-                    contentNode = document.createElement('div'), // 커스텀 오버레이의 컨텐츠 엘리먼트 입니다 
+                self.placeOverlay = new kakao.maps.CustomOverlay({ zIndex: 1 })
+                var contentNode = document.createElement('div'), // 커스텀 오버레이의 컨텐츠 엘리먼트 입니다 
                     markers = [], // 마커를 담을 배열입니다
                     currCategory = ''; // 현재 선택된 카테고리를 가지고 있을 변수입니다
 
@@ -404,21 +405,21 @@
                 var ps = new kakao.maps.services.Places(map);
 
                 // 지도에 idle 이벤트를 등록합니다
-                kakao.maps.event.addListener(map, 'idle', self.searchPlaces);
+                kakao.maps.event.addListener(map, 'idle', searchPlaces);
 
                 // 커스텀 오버레이의 컨텐츠 노드에 css class를 추가합니다 
                 contentNode.className = 'placeinfo_wrap';
 
                 // 커스텀 오버레이의 컨텐츠 노드에 mousedown, touchstart 이벤트가 발생했을때
                 // 지도 객체에 이벤트가 전달되지 않도록 이벤트 핸들러로 kakao.maps.event.preventMap 메소드를 등록합니다 
-                self.addEventHandle(contentNode, 'mousedown', kakao.maps.event.preventMap);
-                self.addEventHandle(contentNode, 'touchstart', kakao.maps.event.preventMap);
+                addEventHandle(contentNode, 'mousedown', kakao.maps.event.preventMap);
+                addEventHandle(contentNode, 'touchstart', kakao.maps.event.preventMap);
 
                 // 커스텀 오버레이 컨텐츠를 설정합니다
-                self.placeOverlay.setContent(contentNode);
+                placeOverlay.setContent(contentNode);
 
                 // 각 카테고리에 클릭 이벤트를 등록합니다
-                self.addCategoryClickEvent();
+                addCategoryClickEvent();
             }
 
         });

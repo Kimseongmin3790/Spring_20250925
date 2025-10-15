@@ -6,7 +6,8 @@
 	<select id="memberLogin" parameterType="hashmap" resultType="com.example.test1.model.Member">
 		SELECT *
 		FROM TBL_USER
-		WHERE USERID = #{id} AND PASSWORD = #{pwd}
+		WHERE USERID = #{id} 
+		<!-- AND PASSWORD = #{pwd} 해시 적용 후 제거 -->
 	</select>
 	
 	<select id="idCheck" parameterType="hashmap" resultType="com.example.test1.model.Member">
@@ -17,7 +18,7 @@
 	
 	<insert id="memberJoin" parameterType="hashmap" useGeneratedKeys="true" keyColumn="USERID" keyProperty="userId">
 		INSERT INTO TBL_USER (USERID, PASSWORD, NAME, ADDRESS, PHONE, GENDER, STATUS)
-		VALUES(#{id}, #{pwd}, #{name}, #{addr}, #{phone}, #{gender}, #{status})
+		VALUES(#{id}, #{hashPwd}, #{name}, #{addr}, #{phone}, #{gender}, #{status})
 	</insert>
 	
 	<insert id="insertUserImg" parameterType="hashmap">
@@ -39,6 +40,18 @@
 	<update id="loginInit" parameterType="hashmap">
 		UPDATE TBL_USER
 		SET CNT = 0
+		WHERE USERID = #{id}
+	</update>
+	
+	<select id="memberCheck" parameterType="hashmap" resultType="com.example.test1.model.Member">
+		SELECT *
+		FROM TBL_USER
+		WHERE USERID = #{id} AND NAME = #{name} AND REPLACE(PHONE, '-', '') = REPLACE(#{phone}, '-', '')
+	</select>
+	
+	<update id="pwdChange" parameterType="hashmap">
+		UPDATE TBL_USER
+		SET PASSWORD = #{hashPwd}
 		WHERE USERID = #{id}
 	</update>
 </mapper>

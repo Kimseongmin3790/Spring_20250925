@@ -261,10 +261,10 @@
                     success: function (data) {
                         if(data.result == "success") {
                             alert("가입되었습니다");
-                            var form = new FormData();
-                            form.append( "file1",  $("#file1")[0].files[0] );
-                            form.append( "userId",  data.userId);
-                            self.upload(form);
+                            // var form = new FormData();
+                            // form.append( "file1",  $("#file1")[0].files[0] );
+                            // form.append( "userId",  data.userId);
+                            // self.upload(form);
                             // location.href="/member/login.do";
                         } else {
                             alert("가입 실패");

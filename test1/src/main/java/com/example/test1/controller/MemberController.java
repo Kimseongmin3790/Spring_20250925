@@ -37,6 +37,12 @@ public class MemberController {
         return "/member/member-join";
     }
 	
+	@RequestMapping("/member/portone.do") 
+    public String portone(Model model) throws Exception{
+
+        return "/member/portone";
+    }
+	
 	@RequestMapping("/mgr/member/list.do") 
     public String mgr(Model model) throws Exception{
 
@@ -55,9 +61,16 @@ public class MemberController {
         return "/jusoPopup";
     }
 	
+	@RequestMapping("/member/pwd.do") 
+    public String pwd(Model model) throws Exception{
+
+        return "/member/pwd";
+    }
+	
 	@RequestMapping(value = "/member/login.dox", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
 	@ResponseBody
 	public String login(Model model, @RequestParam HashMap<String, Object> map) throws Exception {
+		
 		HashMap<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap = memberservice.login(map);
 		
@@ -85,8 +98,29 @@ public class MemberController {
 	@RequestMapping(value = "/member/join.dox", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
 	@ResponseBody
 	public String join(Model model, @RequestParam HashMap<String, Object> map) throws Exception {
+		
 		HashMap<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap = memberservice.join(map);
+		
+		return new Gson().toJson(resultMap);
+	}
+	
+	@RequestMapping(value = "/member/memberCheck.dox", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+	@ResponseBody
+	public String memberCheck(Model model, @RequestParam HashMap<String, Object> map) throws Exception {
+		
+		HashMap<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap = memberservice.memberCheck(map);
+		
+		return new Gson().toJson(resultMap);
+	}
+	
+	@RequestMapping(value = "/member/pwdChange.dox", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+	@ResponseBody
+	public String pwdChange(Model model, @RequestParam HashMap<String, Object> map) throws Exception {
+		
+		HashMap<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap = memberservice.pwdChange(map);
 		
 		return new Gson().toJson(resultMap);
 	}

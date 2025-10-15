@@ -23,4 +23,8 @@ public interface MemberMapper {
 	void loginFail(HashMap<String, Object> map);
 	// 로그인 실패 횟수 초기화
 	int loginInit(HashMap<String, Object> map);
+	// 비밀번호 찾기 유저 정보 조회
+	Member memberCheck(HashMap<String, Object> map);
+	// 비밀번호 변경
+	int pwdChange(HashMap<String, Object> map);
 }
