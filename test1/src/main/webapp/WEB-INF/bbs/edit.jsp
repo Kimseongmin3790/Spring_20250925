@@ -25,11 +25,20 @@
 <body>
     <div id="app">
         <!-- html 코드는 id가 app인 태그 안에서 작업 -->
-        {{sessionName}}님 환영합니다 메인페이지입니다
         <div>
-            <a href="/board-list.do"><button>게시판으로 이동</button></a>
-            <a href="/product.do"><button>제품 목록으로</button></a>
-            <button @click="fnLogout">로그아웃</button>
+            <table>
+                <tr>
+                    <th>제목</th>
+                    <td><input type="text" v-model="info.title"></td>
+                </tr>
+                <tr>
+                    <th>내용</th>
+                    <td style="height: 100px;"><textarea v-model="info.contents" rows="5"></textarea></td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            <button @click="fnEdit">저장</button>
         </div>
     </div>
 </body>
@@ -40,23 +49,41 @@
         data() {
             return {
                 // 변수 - (key : value)
-                sessionId: "${sessionId}",
-                sessionName: "${sessionName}"
+                bbsNum: "${bbsNum}",
+                info: {}
             };
         },
         methods: {
             // 함수(메소드) - (key : function())
-            fnLogout: function () {
+            fnInfo: function () {
                 let self = this;
-                let param = {};
+                let param = {
+                    bbsNum: self.bbsNum
+                };
                 $.ajax({
-                    url: "/member/logout.dox",
+                    url: "/bbs/view.dox",
                     dataType: "json",
                     type: "POST",
                     data: param,
                     success: function (data) {
-                        alert(data.msg);
-                        location.href="/member/login.do";
+                        self.info = data.info;
+                    }
+                });
+            },
+            fnEdit() {
+                let self = this;
+                let param = {
+                    bbsNum: self.bbsNum,
+                    title: self.info.title,
+                    contents: self.info.contents,
+                };
+                $.ajax({
+                    url: "/bbs/edit.dox",
+                    dataType: "json",
+                    type: "POST",
+                    data: param,
+                    success: function (data) {
+                        alert("수정되었습니다");
                     }
                 });
             }
@@ -64,6 +91,7 @@
         mounted() {
             // 처음 시작할 때 실행되는 부분
             let self = this;
+            self.fnInfo();
         }
     });
 

@@ -50,6 +50,11 @@
 		INNER JOIN TBL_MENU M ON F.MENU_PART = M.MENU_NO
 		WHERE F.FOOD_NO = #{foodNo}
 	</select>
+	
+	<insert id="historyInsert" parameterType="hashmap">
+		INSERT INTO PAYMENT_HISTORY
+		VALUES(#{orderId}, #{userId}, #{amount}, #{productNo}, SYSDATE)
+	</insert>
 </mapper>
 
 

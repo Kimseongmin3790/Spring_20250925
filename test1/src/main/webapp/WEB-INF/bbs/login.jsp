@@ -25,11 +25,14 @@
 <body>
     <div id="app">
         <!-- html 코드는 id가 app인 태그 안에서 작업 -->
-        {{sessionName}}님 환영합니다 메인페이지입니다
         <div>
-            <a href="/board-list.do"><button>게시판으로 이동</button></a>
-            <a href="/product.do"><button>제품 목록으로</button></a>
-            <button @click="fnLogout">로그아웃</button>
+            아이디 : <input type="text" v-model="id">
+        </div>
+        <div>
+            비밀번호 : <input type="password" v-model="pwd">
+        </div>
+        <div>
+            <button @click="fnLogin">로그인</button>
         </div>
     </div>
 </body>
@@ -40,23 +43,27 @@
         data() {
             return {
                 // 변수 - (key : value)
-                sessionId: "${sessionId}",
-                sessionName: "${sessionName}"
+                id: "",
+                pwd: ""
             };
         },
         methods: {
             // 함수(메소드) - (key : function())
-            fnLogout: function () {
+            fnLogin: function () {
                 let self = this;
-                let param = {};
+                let param = {
+                    id: self.id,
+                    pwd: self.pwd
+                };
                 $.ajax({
-                    url: "/member/logout.dox",
+                    url: "/bbs/login.dox",
                     dataType: "json",
                     type: "POST",
                     data: param,
                     success: function (data) {
-                        alert(data.msg);
-                        location.href="/member/login.do";
+                        if(data.result == "success") {
+                            location.href="/bbs/list.do"
+                        }
                     }
                 });
             }

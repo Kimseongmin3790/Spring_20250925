@@ -7,6 +7,7 @@
     <title>Document</title>
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="/js/page-change.js"></script>
     <style>
         table, tr, td, th{
             border : 1px solid black;
@@ -25,12 +26,29 @@
 <body>
     <div id="app">
         <!-- html 코드는 id가 app인 태그 안에서 작업 -->
-        {{sessionName}}님 환영합니다 메인페이지입니다
-        <div>
-            <a href="/board-list.do"><button>게시판으로 이동</button></a>
-            <a href="/product.do"><button>제품 목록으로</button></a>
-            <button @click="fnLogout">로그아웃</button>
-        </div>
+         <div>
+             <table>
+                <tr>
+                    <th>제목</th>
+                    <td>{{info.title}}</td>
+                </tr>
+                <tr>
+                    <th>내용</th>
+                    <td>{{info.contents}}</td>
+                </tr>
+                <tr>
+                    <th>조회수</th>
+                    <td>{{info.hit}}</td>
+                </tr>
+                <tr>
+                    <th>작성일</th>
+                    <td>{{info.cdatetime}}</td>
+                </tr>
+             </table>
+         </div>
+         <div>
+            <button @click="fnEdit">수정</button>
+         </div>
     </div>
 </body>
 </html>
@@ -40,30 +58,36 @@
         data() {
             return {
                 // 변수 - (key : value)
-                sessionId: "${sessionId}",
-                sessionName: "${sessionName}"
+                bbsNum: "${bbsNum}",
+                info: {}
             };
         },
         methods: {
             // 함수(메소드) - (key : function())
-            fnLogout: function () {
+            fnInfo: function () {
                 let self = this;
-                let param = {};
+                let param = {
+                    bbsNum: self.bbsNum
+                };
                 $.ajax({
-                    url: "/member/logout.dox",
+                    url: "/bbs/view.dox",
                     dataType: "json",
                     type: "POST",
                     data: param,
                     success: function (data) {
-                        alert(data.msg);
-                        location.href="/member/login.do";
+                        self.info = data.info;
                     }
                 });
+            },
+            fnEdit() {
+                let self = this;
+                pageChange("/bbs/edit.do", {bbsNum : self.bbsNum});
             }
         }, // methods
         mounted() {
             // 처음 시작할 때 실행되는 부분
             let self = this;
+            self.fnInfo();
         }
     });
 

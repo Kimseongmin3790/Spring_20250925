@@ -52,7 +52,10 @@
                 </tr>
                 <tr>
                     <th>내용</th>
-                    <td><textarea v-model="contents" style="width: 380px; height: 400px;"></textarea></td>
+                    <td style="height: 300px;">
+                        <!-- <textarea v-model="contents" style="width: 380px; height: 400px;"></textarea> -->
+                        <div id="editor" style="height: 250px;" v-model="contents"></div>
+                    </td>
                 </tr>
              </table>
          </div>
@@ -120,6 +123,26 @@
                 alert("로그인 후 이용해 주세요");
                 location.href="/member/login.do"
             }
+
+            // Quill 에디터 초기화
+            var quill = new Quill('#editor', {
+                theme: 'snow',
+                modules: {
+                    toolbar: [
+                        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                        ['bold', 'italic', 'underline'],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        ['link', 'image'],
+                        ['clean']
+                    ]
+                }
+            });
+
+            // 에디터 내용이 변경될 때마다 Vue 데이터를 업데이트
+            quill.on('text-change', function() {
+                self.contents = quill.root.innerHTML;
+            });
+
         }
     });
     app.mount('#app');

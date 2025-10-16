@@ -24,4 +24,7 @@ public interface ProductMapper {
 	
 	// 음식 상세정보
 	Product selectFoodInfo(HashMap<String, Object> map);
+	
+	// 결제 내역
+	int historyInsert(HashMap<String, Object> map);
 }

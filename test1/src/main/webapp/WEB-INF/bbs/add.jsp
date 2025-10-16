@@ -26,15 +26,23 @@
     <div id="app">
         <!-- html 코드는 id가 app인 태그 안에서 작업 -->
         <div>
-            <label>아이디 : <input type="text" v-model="id"></label>
+            <table>
+                <tr>
+                    <th>제목</th>
+                    <td><input v-model="title"></td>
+                </tr>
+                <tr>
+                    <th>내용</th>
+                    <td><textarea v-model="contents"></textarea></td>
+                </tr>
+                <tr>
+                    <th>이미지</th>
+                    <td><input type="file" id="file1" name="file1" accept=".jpg, .png"></td>
+                </tr>
+            </table>
         </div>
         <div>
-            <label>비밀번호 : <input type="password" v-model="pwd"></label>
-        </div>
-        <div>
-            <button @click="fnLogin">로그인</button>
-            <a href="/member/join.do"><button>회원가입</button></a>
-            <a href="/member/pwd.do"><button>비밀번호 찾기</button></a>
+            <button @click="fnAdd">저장</button>
         </div>
     </div>
 </body>
@@ -45,29 +53,47 @@
         data() {
             return {
                 // 변수 - (key : value)
-                id: "",
-                pwd: ""
+                userId: "${sessionId}",
+                title: "",
+                contents: ""
             };
         },
         methods: {
             // 함수(메소드) - (key : function())
-            fnLogin: function () {
+            fnAdd: function () {
                 let self = this;
                 let param = {
-                    id: self.id,
-                    pwd: self.pwd
+                    title: self.title,
+                    contents: self.contents,
+                    userId: self.userId
                 };
                 $.ajax({
-                    url: "/member/login.dox",
+                    url: "/bbs/add.dox",
                     dataType: "json",
                     type: "POST",
                     data: param,
                     success: function (data) {
-                        alert(data.msg);
                         if(data.result == "success"){
-                            location.href = data.url;
+                            alert("추가되었습니다.");
+                            var form = new FormData();
+                            form.append( "file1",  $("#file1")[0].files[0] );
+                            form.append( "bbsNum",  data.bbsNum);
+                            self.upload(form);
                         }
                     }
+                });
+            },
+            upload : function(form){
+                var self = this;
+                $.ajax({
+                    url : "/bbsFileUpload.dox", 
+                    type : "POST", 
+                    processData : false, 
+                    contentType : false, 
+                    data : form, 
+                    success:function(data) { 
+                        console.log(data);
+                    }	           
                 });
             }
         }, // methods

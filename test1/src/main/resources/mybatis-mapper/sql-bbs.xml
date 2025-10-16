@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.test1.mapper.BbsMapper">
+	<select id="selectBbsList" parameterType="hashmap" resultType="com.example.test1.model.Bbs">
+		SELECT *
+		FROM TBL_BBS
+		WHERE 1=1 
+		<if test="kind == 'title'">
+			AND TITLE LIKE '%${keyword}%'
+		</if>
+		<if test="kind == 'contents'">
+			AND CONTENTS LIKE '%${keyword}%'
+		</if>
+		ORDER BY BBS_NUM DESC
+		OFFSET #{page} ROWS FETCH NEXT #{pageSize} ROWS ONLY
+	</select>
+	
+	<select id="selectBbsCnt" parameterType="hashmap" resultType="int">
+		SELECT COUNT(*)
+		FROM TBL_BBS
+		WHERE 1=1 
+		<if test="kind == 'title'">
+			AND TITLE LIKE '%' || #{keyword} || '%'
+		</if>
+		<if test="kind == 'userId'">
+			AND USERID LIKE '%' || #{keyword} || '%'
+		</if>
+	</select>
+	
+	<select id="login" parameterType="hashmap" resultType="com.example.test1.model.Member">
+		SELECT *
+		FROM TBL_USER
+		WHERE USERID = #{id}
+	</select>
+	
+	<insert id="insertBbs" parameterType="hashmap" useGeneratedKeys="true" keyColumn="BBS_NUM" keyProperty="bbsNum">
+		INSERT INTO TBL_BBS
+		VALUES(BBS_SEQ.NEXTVAL, #{title}, #{contents}, 0, #{userId}, SYSDATE, SYSDATE)
+	</insert>
+	
+	<delete id="deleteBbsList" parameterType="hashmap">
+		DELETE FROM TBL_BBS
+		WHERE BBS_NUM IN
+		<foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+			#{item}
+		</foreach>
+	</delete>
+	
+	<select id="selectBbsInfo" parameterType="hashmap" resultType="com.example.test1.model.Bbs">
+		SELECT *
+		FROM TBL_BBS
+		WHERE BBS_NUM = #{bbsNum}
+	</select>
+	
+	<update id="editBbs" parameterType="hashmap">
+		UPDATE TBL_BBS
+		SET TITLE = #{title}, CONTENTS = #{contents}
+		WHERE BBS_NUM = #{bbsNum}
+	</update>
+	
+	<insert id="insertBbsImg" parameterType="hashmap">
+		INSERT INTO TBL_BOARD_FILE
+		VALUES(FILE_SEQ.NEXTVAL, #{bbsNum}, #{path}, #{fileName}, #{orgName}, #{size}, #{ext})
+	</insert>
+</mapper>
+
+
+
+

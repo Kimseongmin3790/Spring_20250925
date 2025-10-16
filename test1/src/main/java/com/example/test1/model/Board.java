@@ -4,6 +4,7 @@ public class Board {
 	private String boardNo;
 	private String title;
 	private String contents;
+	private String contents2;
 	private String userId;
 	private String cnt;
 	private String favorite;
@@ -93,5 +94,11 @@ public class Board {
 	}
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
+	}
+	public String getContents2() {
+		return contents2;
+	}
+	public void setContents2(String contents2) {
+		this.contents2 = contents2;
 	}
 }
