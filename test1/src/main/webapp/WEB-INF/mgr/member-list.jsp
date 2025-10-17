@@ -21,11 +21,29 @@
         tr:nth-child(even){
             background-color: azure;
         }
+        .active{
+            color: red;
+        }
+        div span{
+            margin-left: 5px;
+            margin-right: 5px;
+        }
     </style>
 </head>
 <body>
     <div id="app">
         <!-- html 코드는 id가 app인 태그 안에서 작업 -->
+         <div>
+            <select v-model="pageSize" @change="fnList(1)">
+                <option value="3">3개씩</option>
+                <option value="5">5개씩</option>
+                <option value="10">10개씩</option>
+            </select>
+         </div>
+         <div>
+            검색 : <input type="text" v-model="keyword" @keyup.enter="fnList(1)">
+            <button @click="fnList(1)">검색</button>
+         </div>
          <div>
              <table>
                 <tr>
@@ -52,6 +70,13 @@
                 </tr>
              </table>
          </div>
+         <div>
+            <a v-if="page > 1" href="javascript:;" @click="fnPage(-1)">◀</a>
+            <span v-for="num in index" @click="fnMove(num)">
+                <a href="javascript:;" :class="{active : page == num}">{{num}}</a>
+            </span>
+            <a v-if="page < index" href="javascript:;" @click="fnPage(1)">▶</a>
+         </div>
     </div>
 </body>
 </html>
@@ -61,14 +86,25 @@
         data() {
             return {
                 // 변수 - (key : value)
-                list: []
+                list: [],
+                pageSize: 3,
+                page: 1,
+                index: 0,
+                keyword: ""
             };
         },
         methods: {
             // 함수(메소드) - (key : function())
-            fnList: function () {
+            fnList: function (num) {
                 let self = this;
-                let param = {};
+                if(num == 1) {
+                    self.page = 1;
+                }
+                let param = {
+                    pageSize: self.pageSize,
+                    page: (self.page -1) * self.pageSize,
+                    keyword: self.keyword
+                };
                 $.ajax({
                     url: "/mgr/member/list.dox",
                     dataType: "json",
@@ -76,6 +112,7 @@
                     data: param,
                     success: function (data) {
                         self.list = data.list;
+                        self.index = Math.ceil(data.cnt / self.pageSize);
                     }
                 });
             },
@@ -101,6 +138,16 @@
             },
             fnView: function (userId) {
                 pageChange("/mgr/member/view.do", {userId: userId});
+            },
+            fnMove(num) {
+                let self = this;
+                self.page = num;
+                self.fnList();
+            },
+            fnPage(num){
+                let self = this;
+                self.page += num;
+                self.fnList();
             }
         }, // methods
         mounted() {

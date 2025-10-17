@@ -29,6 +29,16 @@
 	<select id="memberList" parameterType="hashmap" resultType="com.example.test1.model.Member">
 		SELECT U.*, DECODE(BIRTH, NULL, '정보없음', SUBSTR(BIRTH, 3, 2) || '.' || SUBSTR(BIRTH, 5, 2) || '.' || SUBSTR(BIRTH, 7, 2)) AS NEWBIRTH
 		FROM TBL_USER U
+		WHERE 
+			(USERID LIKE '%' || #{keyword} || '%' OR NAME LIKE '%' || #{keyword} || '%')
+		OFFSET #{page} ROWS FETCH NEXT #{pageSize} ROWS ONLY
+	</select>
+	
+	<select id="selectMemberCnt" parameterType="hashmap" resultType="int">
+		SELECT COUNT(*)
+		FROM TBL_USER
+		WHERE 
+			(USERID LIKE '%' || #{keyword} || '%' OR NAME LIKE '%' || #{keyword} || '%')
 	</select>
 	
 	<update id="loginFail" parameterType="hashmap">

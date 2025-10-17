@@ -160,6 +160,8 @@ public class MemberService {
 		
 		try {
 			List<Member> list = membermapper.memberList(map);
+			int cnt = membermapper.selectMemberCnt(map);
+			resultmap.put("cnt", cnt);		
 			resultmap.put("list", list);
 			resultmap.put("result", "success");
 		} catch (Exception e) {

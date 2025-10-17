@@ -8,7 +8,6 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import com.example.test1.controller.BoardController;
 import com.example.test1.mapper.BbsMapper;
 import com.example.test1.model.Bbs;
 import com.example.test1.model.Member;
@@ -16,7 +15,6 @@ import com.example.test1.model.Member;
 @Service
 public class BbsService {
 
-    private final BoardController boardController;
 	
 	@Autowired
 	BbsMapper bbsMapper;
@@ -26,10 +24,6 @@ public class BbsService {
 	
 	@Autowired
 	PasswordEncoder passwordEncoder;
-
-    BbsService(BoardController boardController) {
-        this.boardController = boardController;
-    }
 	
 	public HashMap<String, Object> login(HashMap<String, Object> map) {
 		HashMap<String, Object> resultmap = new HashMap<String, Object>();
@@ -53,9 +47,7 @@ public class BbsService {
 		HashMap<String, Object> resultmap = new HashMap<String, Object>();
 		
 		try {
-			System.out.println(map);
-			int cnt = bbsMapper.selectBbsCnt();
-			System.out.println(cnt);
+			int cnt = bbsMapper.selectBbsCnt(map);
 			List<Bbs> list = bbsMapper.selectBbsList(map);
 			resultmap.put("cnt", cnt);
 			resultmap.put("list", list);
@@ -133,6 +125,6 @@ public class BbsService {
 	
 	public void addBbsImg(HashMap<String, Object> map) {
 		// TODO Auto-generated method stub
-		int cnt = bbsMapper.insertBbsImg(map);
+		bbsMapper.insertBbsImg(map);
 	}
 }

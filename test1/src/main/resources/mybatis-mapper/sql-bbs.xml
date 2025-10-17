@@ -42,10 +42,7 @@
 	
 	<delete id="deleteBbsList" parameterType="hashmap">
 		DELETE FROM TBL_BBS
-		WHERE BBS_NUM IN
-		<foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
-			#{item}
-		</foreach>
+		WHERE BBS_NUM = #{selectItem}
 	</delete>
 	
 	<select id="selectBbsInfo" parameterType="hashmap" resultType="com.example.test1.model.Bbs">

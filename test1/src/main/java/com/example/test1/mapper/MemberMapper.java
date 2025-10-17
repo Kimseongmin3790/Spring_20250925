@@ -19,6 +19,8 @@ public interface MemberMapper {
 	int insertUserImg(HashMap<String, Object> map);
 	// 회원 목록
 	List<Member> memberList(HashMap<String, Object> map);
+	// 회원 숫자
+	int selectMemberCnt(HashMap<String, Object> map);
 	// 로그인 실패 횟수 증가
 	void loginFail(HashMap<String, Object> map);
 	// 로그인 실패 횟수 초기화

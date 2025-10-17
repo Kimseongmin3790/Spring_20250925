@@ -12,7 +12,7 @@ import com.example.test1.model.Member;
 public interface BbsMapper {
 	// 로그인
 	Member login(HashMap<String, Object> map);
-	// bbs리스트
+	// 글 리스트
 	List<Bbs> selectBbsList(HashMap<String, Object> map);
 	// 글 추가
 	int insertBbs(HashMap<String, Object> map);
@@ -23,7 +23,7 @@ public interface BbsMapper {
 	// 글 수정
 	int editBbs(HashMap<String, Object> map);
 	// 모든 글 숫자
-	int selectBbsCnt();
+	int selectBbsCnt(HashMap<String, Object> map);
 	// 파일 업로드
 	int insertBbsImg(HashMap<String, Object> map);
 }
